@@ -48,6 +48,41 @@ char** StringParcala(char* a_str)
  return komutlar;
 }
 
+
+// aldığı stringin kelimelerini string dizisine atarak döndürür
+#define LSH_TOK_BUFSIZE 64
+#define LSH_TOK_DELIM " \t\r\n\a" // çeşitli boşluklara göre böler
+char **lsh_split_line(char *line)
+{
+  int bufsize = LSH_TOK_BUFSIZE, position = 0;
+  char **tokens = malloc(bufsize * sizeof(char*));
+  char *token;
+
+  if (!tokens) {
+    fprintf(stderr, "lsh: allocation error\n");
+    exit(EXIT_FAILURE);
+  }
+
+  token = strtok(line, LSH_TOK_DELIM);
+  while (token != NULL) {
+    tokens[position] = token;
+    position++;
+
+    if (position >= bufsize) {
+      bufsize += LSH_TOK_BUFSIZE;
+      tokens = realloc(tokens, bufsize * sizeof(char*));
+      if (!tokens) {
+        fprintf(stderr, "lsh: allocation error\n");
+        exit(EXIT_FAILURE);
+      }
+    }
+
+    token = strtok(NULL, LSH_TOK_DELIM);
+  }
+  tokens[position] = NULL;
+  return tokens;
+}
+
 // String uzunluğunu döndürür
 int KomutUzunlukGetir(char* komut){
 	int i;
@@ -55,3 +90,38 @@ int KomutUzunlukGetir(char* komut){
 	return i;
 	
 }
+
+// Komut uzunluğunu ve adet kontrolü yapılır.
+int BoyutKontrol(char** komutlar){
+	/*
+	for(int j=0;komutlar[j]!=NULL;j++){
+	 int x = KomutUzunlukGetir(komutlar[j]);
+	   printf("%s->%d\n",komutlar[j],x);
+	}	
+	
+	*/
+	int x = KomutUzunlukGetir(komutlar[0]); // ilk komutun uzunluğu 80 den fazla olamaz
+	if(x>80){
+	   printf("Hata : Komut uzunluğu :80 'den fazla olamaz\n");
+	   return -1;
+	}
+	
+	int j;
+	for(j=0;komutlar[j]!=NULL;j++);
+	if(j>10){
+	   printf("Hata : Komut argumanlari 10'dan fazla olamaz\n");
+	   return -1;
+	}	
+	
+  return 0;
+}
+
+// kullanıcıdan girdi al
+char* GirdiAl(){
+  char *line=NULL;
+  ssize_t bufsize = 0; // have getline allocate a buffer for us
+  getline(&line,&bufsize,stdin);
+  return line;
+}
+
+#endif
