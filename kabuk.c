@@ -1,4 +1,4 @@
-#include<stdlib.h>
+[16:29, 14.12.2021] +90 533 058 54 35: #include<stdlib.h>
 #include<stdio.h>
 #include <string.h>
 #include <assert.h>
@@ -71,4 +71,36 @@ void KomutSec(char** komutlar){
   else{
   	KomutIcrasi(komutlar,0); // icraya gönder
   }
+}
+
+int main(){
+
+   char* satir = NULL; // okunan girdi
+   char** komut_dizisi = NULL;// komut dizisi
+   char* calisma_dizini=NULL; // anlık çalışma dizini
+   
+   while(1){
+   calisma_dizini = (char *) malloc (1024);
+   if (getcwd(calisma_dizini, 1024) != NULL)
+   	printf("%s%s  ",KYEL,calisma_dizini);
+   	
+     printf("%s",KCYN);
+     printf("sau >");     	// renk ayarı
+     printf("%s",KNRM);
+     
+     satir = GirdiAl();
+     
+     satir = EnterSil(satir);// kullancıcı komutu girince sonda enter oluyor bunu sil
+    // komut_dizisi = StringParcala(satir);// boşluğa parçala
+     komut_dizisi = lsh_split_line(satir);
+     // komut uzunluk ve argüman sayısı kontrolü
+     int sonuc = BoyutKontrol(komut_dizisi);
+     if(sonuc==0) // aykırı durum yoksa icraya gönder
+     	KomutSec(komut_dizisi);     	
+     	
+     free(komut_dizisi); 	// verileri temizle
+     free(satir);
+     free(calisma_dizini);	// satir değişkeni malloc ile oluşturulmadığı için silmeye gerek yok.
+   }
+   return 0;
 }
