@@ -1,4 +1,4 @@
-[16:29, 14.12.2021] +90 533 058 54 35: #include<stdlib.h>
+#include<stdlib.h>
 #include<stdio.h>
 #include <string.h>
 #include <assert.h>
